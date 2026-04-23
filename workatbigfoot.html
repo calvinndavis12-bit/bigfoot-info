@@ -1,0 +1,617 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Work at Bigfoot — Stay in Utah. Maximize Your Summer.</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow:wght@400;500;600;700&family=Barlow+Condensed:wght@600;700;800&display=swap" rel="stylesheet"/>
+<style>
+  :root {
+    --red:      #CC1E1E;
+    --red-dark: #A01515;
+    --red-glow: rgba(204,30,30,0.22);
+    --black:    #0D0D0D;
+    --black2:   #161616;
+    --black3:   #1E1E1E;
+    --white:    #FFFFFF;
+    --gray:     #999999;
+    --gray-bg:  #2A2A2A;
+    --border:   rgba(255,255,255,0.08);
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--black);
+    color: var(--white);
+    font-family: 'Barlow', sans-serif;
+    overflow-x: hidden;
+  }
+
+  body::before {
+    content: '';
+    position: fixed; inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.035'/%3E%3C/svg%3E");
+    pointer-events: none; z-index: 0; opacity: 0.5;
+  }
+
+  /* ══ CALCULATOR ══ */
+  .calc-section {
+    position: relative; z-index: 1;
+    padding: 72px 60px;
+    background: linear-gradient(160deg, #111 0%, #0D0D0D 100%);
+    border-bottom: 1px solid var(--border);
+  }
+  .calc-inner { max-width: 1040px; margin: 0 auto; }
+
+  .calc-header { text-align: center; margin-bottom: 44px; }
+  .calc-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(38px, 5vw, 58px);
+    line-height: 1;
+  }
+  .calc-title span { color: var(--red); }
+
+  .calc-body { display: grid; grid-template-columns: 1fr 1fr; gap: 32px; align-items: start; }
+
+  .calc-inputs {
+    background: var(--black2);
+    border: 1px solid var(--border);
+    border-top: 3px solid var(--red);
+    border-radius: 4px; padding: 36px;
+  }
+
+  .slider-group { margin-bottom: 22px; }
+  .slider-row { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 10px; }
+  .slider-lbl { font-size: 13px; font-weight: 600; color: var(--white); }
+  .slider-val { font-family: 'Bebas Neue', sans-serif; font-size: 36px; color: var(--red); line-height: 1; }
+
+  /* ── Range slider ── */
+  .calc-range {
+    -webkit-appearance: none;
+    appearance: none;
+    display: block;
+    width: 100%;
+    height: 5px;
+    border-radius: 3px;
+    outline: none;
+    cursor: pointer;
+    border: none !important;
+    padding: 0 !important;
+    box-shadow: none !important;
+    background: var(--gray-bg);
+  }
+  .calc-range::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 22px; height: 22px;
+    border-radius: 50%;
+    background: var(--red);
+    cursor: pointer;
+    border: 3px solid var(--black2);
+    box-shadow: 0 0 0 2px var(--red);
+    transition: transform 0.15s, box-shadow 0.2s;
+  }
+  .calc-range::-webkit-slider-thumb:hover {
+    transform: scale(1.2);
+    box-shadow: 0 0 0 5px var(--red-glow);
+  }
+  .calc-range::-moz-range-thumb {
+    width: 22px; height: 22px;
+    border-radius: 50%;
+    background: var(--red);
+    cursor: pointer;
+    border: 3px solid var(--black2);
+    box-shadow: 0 0 0 2px var(--red);
+  }
+  .calc-range::-moz-range-track {
+    height: 5px; border-radius: 3px; background: transparent;
+  }
+
+  .divider-line { border: none; border-top: 1px solid var(--border); margin: 22px 0; }
+
+  /* fixed-parameter rows */
+  .fixed-row {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 11px 0; border-bottom: 1px solid var(--border);
+  }
+  .fixed-row:last-child { border-bottom: none; }
+  .fixed-label {
+    font-size: 12px; font-weight: 600; color: var(--gray);
+  }
+  .fixed-val {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 22px; color: var(--white);
+  }
+
+  /* results column */
+  .calc-results { display: flex; flex-direction: column; gap: 14px; }
+
+  .result-card {
+    background: var(--black2);
+    border: 1px solid var(--border);
+    border-radius: 4px; padding: 28px 30px;
+  }
+  .result-card.highlight {
+    border-color: rgba(204,30,30,0.4);
+    background: linear-gradient(135deg, #1c0808 0%, var(--black2) 100%);
+  }
+  .result-label {
+    font-size: 10px; font-weight: 700;
+    letter-spacing: 2.5px; text-transform: uppercase;
+    color: var(--gray); margin-bottom: 6px;
+  }
+  .result-amount {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 72px; line-height: 1;
+    color: var(--red);
+  }
+
+  .result-breakdown {
+    display: flex; gap: 28px; flex-wrap: wrap;
+    margin-top: 18px; padding-top: 18px;
+    border-top: 1px solid var(--border);
+  }
+  .breakdown-item { display: flex; flex-direction: column; }
+  .breakdown-val {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 26px; color: var(--white); line-height: 1;
+  }
+  .breakdown-key {
+    font-size: 10px; letter-spacing: 1.5px;
+    text-transform: uppercase; color: var(--gray); margin-top: 4px;
+  }
+
+  .cta-nudge {
+    background: var(--red); border-radius: 3px;
+    padding: 15px 22px;
+    display: flex; align-items: center;
+    justify-content: center; gap: 10px;
+    cursor: pointer; transition: background 0.2s, transform 0.15s;
+    text-decoration: none;
+  }
+  .cta-nudge:hover { background: var(--red-dark); transform: translateY(-1px); }
+  .cta-nudge-text {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 16px; font-weight: 800;
+    letter-spacing: 2px; text-transform: uppercase; color: var(--white);
+  }
+
+  /* ══ HERO ══ */
+  .hero {
+    position: relative; min-height: 100vh;
+    display: grid; grid-template-columns: 1fr 1fr;
+    align-items: center; overflow: hidden;
+  }
+  .hero-bg {
+    position: absolute; inset: 0;
+    background:
+      radial-gradient(ellipse 60% 80% at 70% 50%, rgba(204,30,30,0.11) 0%, transparent 70%),
+      linear-gradient(160deg, #0D0D0D 0%, #1a0808 50%, #0D0D0D 100%);
+    z-index: 0;
+  }
+  .hero-bg::after {
+    content: ''; position: absolute;
+    top: 0; right: 35%; bottom: 0; width: 2px;
+    background: linear-gradient(to bottom, transparent, var(--red), transparent);
+    transform: skewX(-6deg); opacity: 0.4;
+  }
+  .hero-left {
+    position: relative; z-index: 1;
+    padding: 80px 60px 80px 80px;
+    display: flex; flex-direction: column; justify-content: center;
+  }
+  .hero-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(56px, 7.5vw, 92px);
+    line-height: 0.92; letter-spacing: 1px; margin-bottom: 24px;
+    opacity: 0; animation: fadeUp 0.7s ease forwards 0.2s;
+  }
+  .hero-title span { color: var(--red); }
+  .hero-sub {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 20px; font-weight: 600;
+    color: #CCCCCC; margin-bottom: 36px;
+    opacity: 0; animation: fadeUp 0.7s ease forwards 0.35s;
+  }
+
+  /* form panel */
+  .hero-right {
+    position: relative; z-index: 1;
+    padding: 60px 80px 60px 60px;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .form-card {
+    background: var(--black2);
+    border: 1px solid var(--border);
+    border-top: 3px solid var(--red);
+    border-radius: 4px; padding: 40px;
+    width: 100%; max-width: 460px;
+    opacity: 0; animation: fadeIn 0.8s ease forwards 0.4s;
+    box-shadow: 0 32px 80px rgba(0,0,0,0.5);
+  }
+  .form-title {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 22px; font-weight: 800;
+    letter-spacing: 1px; text-transform: uppercase; margin-bottom: 4px;
+  }
+  .form-subtitle { font-size: 13px; color: var(--gray); margin-bottom: 28px; line-height: 1.5; }
+
+  .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .field { display: flex; flex-direction: column; margin-bottom: 14px; }
+  .field-label {
+    font-size: 10px; font-weight: 700;
+    letter-spacing: 2px; text-transform: uppercase;
+    color: var(--gray); margin-bottom: 6px;
+  }
+
+  .form-input, .form-select {
+    background: var(--black3);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 3px;
+    color: var(--white);
+    font-family: 'Barlow', sans-serif;
+    font-size: 14px; padding: 11px 13px;
+    outline: none;
+    transition: border-color 0.2s, box-shadow 0.2s;
+    width: 100%;
+    -webkit-appearance: none; appearance: none;
+  }
+  .form-input::placeholder { color: #444; }
+  .form-input:focus, .form-select:focus {
+    border-color: var(--red);
+    box-shadow: 0 0 0 3px var(--red-glow);
+  }
+  .form-select {
+    cursor: pointer;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23CC1E1E' stroke-width='2' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 13px center;
+    padding-right: 36px;
+  }
+  .form-select option { background: #1E1E1E; }
+
+  .avail-label {
+    font-size: 10px; font-weight: 700;
+    letter-spacing: 2px; text-transform: uppercase;
+    color: var(--gray); margin-bottom: 10px;
+  }
+  .avail-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 7px; margin-bottom: 14px; }
+  .avail-option { position: relative; }
+  .avail-option input[type="checkbox"] { position: absolute; opacity: 0; width: 0; height: 0; }
+  .avail-option label {
+    display: flex; align-items: center; gap: 8px;
+    padding: 9px 11px;
+    background: var(--black3);
+    border: 1px solid rgba(255,255,255,0.09);
+    border-radius: 3px; cursor: pointer;
+    font-size: 12px; font-weight: 500;
+    color: #AAAAAA; transition: all 0.15s;
+    user-select: none;
+  }
+  .avail-option label::before {
+    content: ''; width: 14px; height: 14px;
+    border: 1.5px solid rgba(255,255,255,0.2);
+    border-radius: 2px; flex-shrink: 0; transition: all 0.15s;
+  }
+  .avail-option input:checked + label { border-color: var(--red); background: rgba(204,30,30,0.08); color: var(--white); }
+  .avail-option input:checked + label::before {
+    background: var(--red); border-color: var(--red);
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='9' height='7' viewBox='0 0 9 7'%3E%3Cpath d='M1 3.5l2.5 2.5 5-5' stroke='white' stroke-width='1.6' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+    background-repeat: no-repeat; background-position: center;
+  }
+
+  .submit-btn {
+    width: 100%; background: var(--red); color: var(--white);
+    border: none; border-radius: 3px;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 16px; font-weight: 800;
+    letter-spacing: 3px; text-transform: uppercase;
+    padding: 14px 22px; cursor: pointer; margin-top: 6px;
+    transition: background 0.2s, transform 0.15s, box-shadow 0.2s;
+  }
+  .submit-btn:hover { background: var(--red-dark); box-shadow: 0 8px 24px rgba(204,30,30,0.35); transform: translateY(-1px); }
+  .submit-btn:active { transform: translateY(0); }
+
+  .success-msg { display: none; text-align: center; padding: 24px 0; }
+  .success-icon {
+    width: 58px; height: 58px;
+    background: rgba(204,30,30,0.1); border: 2px solid var(--red);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    margin: 0 auto 18px; font-size: 22px;
+  }
+  .success-msg h3 {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 22px; font-weight: 800;
+    letter-spacing: 1px; text-transform: uppercase; margin-bottom: 8px;
+  }
+  .success-msg p { color: var(--gray); font-size: 13px; line-height: 1.6; }
+
+  .footer {
+    position: relative; z-index: 1;
+    text-align: center; padding: 22px;
+    color: #444; font-size: 12px;
+    border-top: 1px solid var(--border);
+  }
+  .footer span { color: var(--red); }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(18px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes shake {
+    0%,100%{transform:translateX(0)}
+    20%{transform:translateX(-6px)} 40%{transform:translateX(6px)}
+    60%{transform:translateX(-4px)} 80%{transform:translateX(4px)}
+  }
+
+  @media (max-width: 960px) {
+    .calc-section { padding: 56px 24px; }
+    .calc-body { grid-template-columns: 1fr; }
+    .hero { grid-template-columns: 1fr; min-height: auto; }
+    .hero-left { padding: 60px 28px 36px; }
+    .hero-right { padding: 0 20px 60px; }
+    .hero-bg::after { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<!-- CALCULATOR -->
+<section class="calc-section">
+  <div class="calc-inner">
+    <div class="calc-header">
+      <h2 class="calc-title">SEE WHAT <span>YOU'D MAKE.</span></h2>
+    </div>
+
+    <div class="calc-body">
+      <!-- INPUTS -->
+      <div class="calc-inputs">
+        <div class="slider-group">
+          <div class="slider-row">
+            <span class="slider-lbl">Sets / Week</span>
+            <span class="slider-val" id="setsVal">10</span>
+          </div>
+          <input class="calc-range" type="range" id="setsSlider" min="1" max="20" value="10" oninput="updateCalc()"/>
+        </div>
+
+        <hr class="divider-line"/>
+
+        <div class="fixed-row">
+          <span class="fixed-label">Close Rate</span>
+          <span class="fixed-val">40%</span>
+        </div>
+        <div class="fixed-row">
+          <span class="fixed-label">Avg Commission</span>
+          <span class="fixed-val">$20,000</span>
+        </div>
+        <div class="fixed-row">
+          <span class="fixed-label">Your Cut / Roof</span>
+          <span class="fixed-val">$800</span>
+        </div>
+      </div>
+
+      <!-- RESULTS -->
+      <div class="calc-results">
+        <div class="result-card highlight">
+          <div class="result-label">Your Weekly Pay</div>
+          <div class="result-amount" id="weeklyTotal">$3,200</div>
+          <div class="result-breakdown">
+            <div class="breakdown-item">
+              <span class="breakdown-val" id="bdMonthly">$12,800</span>
+              <span class="breakdown-key">Per Month</span>
+            </div>
+            <div class="breakdown-item">
+              <span class="breakdown-val" id="bdSummer">$41,600</span>
+              <span class="breakdown-key">Summer (13 wks)</span>
+            </div>
+          </div>
+        </div>
+
+        <a class="cta-nudge" href="#applyForm">
+          <span class="cta-nudge-text">Apply Now ↓</span>
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- HERO + FORM -->
+<section class="hero" id="applyForm">
+  <div class="hero-bg"></div>
+  <div class="hero-left">
+    <h1 class="hero-title">STAY IN <span>UTAH.</span><br/>MAX YOUR<br/>SUMMER.</h1>
+    <p class="hero-sub">$800 per closed roof. No travel. No experience needed.</p>
+  </div>
+
+  <div class="hero-right">
+    <div class="form-card">
+      <div id="formContent">
+        <div class="form-title">Apply Now</div>
+        <div class="form-subtitle">Drop your info. We'll reach out to schedule your interview.</div>
+
+        <div class="form-row">
+          <div class="field">
+            <div class="field-label">First Name</div>
+            <input class="form-input" type="text" id="firstName" placeholder="John"/>
+          </div>
+          <div class="field">
+            <div class="field-label">Last Name</div>
+            <input class="form-input" type="text" id="lastName" placeholder="Smith"/>
+          </div>
+        </div>
+
+        <div class="field">
+          <div class="field-label">Phone Number</div>
+          <input class="form-input" type="tel" id="phone" placeholder="(385) 000-0000"/>
+        </div>
+
+        <div class="field">
+          <div class="field-label">Email Address</div>
+          <input class="form-input" type="email" id="email" placeholder="john@email.com"/>
+        </div>
+
+        <div class="field">
+          <div class="field-label">Interested In</div>
+          <select class="form-select" id="position">
+            <option value="">Select a role...</option>
+            <option value="setter">Setter (Door-to-Door)</option>
+            <option value="pm">Project Manager / Closer</option>
+            <option value="both">Open to Either</option>
+          </select>
+        </div>
+
+        <div>
+          <div class="avail-label">Interview Availability</div>
+          <div class="avail-grid">
+            <div class="avail-option">
+              <input type="checkbox" id="tue" name="avail" value="Tuesday"/>
+              <label for="tue">Tuesday</label>
+            </div>
+            <div class="avail-option">
+              <input type="checkbox" id="thu" name="avail" value="Thursday"/>
+              <label for="thu">Thursday</label>
+            </div>
+            <div class="avail-option">
+              <input type="checkbox" id="sat" name="avail" value="Saturday"/>
+              <label for="sat">Saturday</label>
+            </div>
+            <div class="avail-option">
+              <input type="checkbox" id="flex" name="avail" value="Flexible"/>
+              <label for="flex">Flexible</label>
+            </div>
+          </div>
+        </div>
+
+        <div class="field">
+          <div class="field-label">Preferred Interview Time</div>
+          <select class="form-select" id="timePreference">
+            <option value="">Select a time...</option>
+            <option value="morning">Morning (8am – 11am)</option>
+            <option value="midday">Midday (11am – 1pm)</option>
+            <option value="afternoon">Afternoon (1pm – 4pm)</option>
+            <option value="evening">Evening (4pm – 7pm)</option>
+          </select>
+        </div>
+
+        <button class="submit-btn" id="submitBtn" onclick="handleSubmit()">Submit Application →</button>
+      </div>
+
+      <div class="success-msg" id="successMsg">
+        <div class="success-icon">✓</div>
+        <h3>You're on the list!</h3>
+        <p>Thanks for applying to Bigfoot Roofing.<br/>We'll be in touch within 24 hours.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="footer">
+  © 2026 <span>Bigfoot Roofing & Gutters</span> · Utah · (385) 482-6069
+</div>
+
+<script>
+// Locked constants
+const CLOSE_RATE     = 0.40;
+const PAY_PER_CLOSE  = 800;  // 4% of $20k avg commission
+const SUMMER_WEEKS   = 13;
+
+function setTrack(el, min, max, val) {
+  const pct = ((val - min) / (max - min)) * 100;
+  el.style.background = `linear-gradient(to right, #CC1E1E ${pct}%, #2A2A2A ${pct}%)`;
+}
+
+function fmtMoney(n) {
+  return '$' + Math.round(n).toLocaleString();
+}
+
+function updateCalc() {
+  const setsEl = document.getElementById('setsSlider');
+  const sets   = parseInt(setsEl.value);
+
+  const closesPerWeek = sets * CLOSE_RATE;
+  const weeklyPay     = closesPerWeek * PAY_PER_CLOSE;
+  const monthlyPay    = weeklyPay * 4;
+  const summerPay     = weeklyPay * SUMMER_WEEKS;
+
+  document.getElementById('setsVal').textContent     = sets;
+  setTrack(setsEl, 1, 20, sets);
+
+  document.getElementById('weeklyTotal').textContent = fmtMoney(weeklyPay);
+  document.getElementById('bdMonthly').textContent   = fmtMoney(monthlyPay);
+  document.getElementById('bdSummer').textContent    = fmtMoney(summerPay);
+}
+
+window.addEventListener('DOMContentLoaded', function() {
+  updateCalc();
+});
+
+// Form — unchanged
+document.addEventListener('DOMContentLoaded', function() {
+  document.getElementById('phone').addEventListener('input', function(e) {
+    let v = e.target.value.replace(/\D/g, '');
+    if (v.length >= 6)      v = '(' + v.slice(0,3) + ') ' + v.slice(3,6) + '-' + v.slice(6,10);
+    else if (v.length >= 3) v = '(' + v.slice(0,3) + ') ' + v.slice(3);
+    e.target.value = v;
+  });
+});
+
+async function handleSubmit() {
+  const first = document.getElementById('firstName').value.trim();
+  const last  = document.getElementById('lastName').value.trim();
+  const phone = document.getElementById('phone').value.trim();
+  const email = document.getElementById('email').value.trim();
+
+  if (!first || !last || !phone || !email) {
+    const btn = document.getElementById('submitBtn');
+    btn.style.animation = 'none';
+    void btn.offsetHeight;
+    btn.style.animation = 'shake 0.4s ease';
+    return;
+  }
+
+  const btn = document.getElementById('submitBtn');
+  btn.textContent = 'Submitting...';
+  btn.disabled = true;
+
+  const days = [...document.querySelectorAll('input[name="avail"]:checked')].map(c => c.value);
+
+  const payload = {
+    'First Name'          : first,
+    'Last Name'           : last,
+    'Phone'               : phone,
+    'email'               : email,
+    'Position Interest'   : document.getElementById('position').value,
+    'Preferred Time'      : document.getElementById('timePreference').value,
+    'Interview Availability' : days.length ? days.join(', ') : 'Not specified',
+  };
+
+  try {
+    const res = await fetch('https://formspree.io/f/xeevrezz', {
+      method : 'POST',
+      headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+      body   : JSON.stringify(payload),
+    });
+
+    if (res.ok) {
+      document.getElementById('formContent').style.display = 'none';
+      document.getElementById('successMsg').style.display  = 'block';
+    } else {
+      btn.textContent = 'Submit Application →';
+      btn.disabled = false;
+      alert('Something went wrong. Please try again.');
+    }
+  } catch(err) {
+    btn.textContent = 'Submit Application →';
+    btn.disabled = false;
+    alert('Network error. Please check your connection and try again.');
+  }
+}
+</script>
+</body>
+</html>
